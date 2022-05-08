@@ -6,9 +6,11 @@
                 Markdown
             </h1>
         </div>
-        <div class="middle-files-section"></div>
+        <div class="middle-files-section">
+            <ul></ul>
+        </div>
         <div
-          v-if="!isSidebarOpen"
+          v-if="!isSidebarToggled"
           class="right-tools-section">
             <button
               class="delete-button"
@@ -27,6 +29,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import SaveButton from './SaveButton.vue';
 import SidebarToggle from './SidebarToggle.vue';
 
@@ -37,9 +40,7 @@ export default {
         SidebarToggle,
     },
     computed: {
-        isSidebarOpen() {
-            return this.$store.state.isSidebarToggled;
-        },
+        ...mapState(['isSidebarToggled']),
     },
 }
 </script>

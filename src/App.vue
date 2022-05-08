@@ -1,24 +1,38 @@
 <template>
   <div id="container">
-    <Topbar />
-    <Sidebar />
+    <Sidebar v-if="isSidebarToggled"/>
+    <div class="persistent-content">
+      <Topbar />
+    </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Topbar from './components/Topbar/Topbar.vue';
-import Sidebar from './components/Sidebar/ThemeToggle.vue';
+import Sidebar from './components/Sidebar/Sidebar.vue';
 
 export default {
   name: 'AppWrapper',
   components: {
     Topbar,
     Sidebar,
+  },
+  computed: {
+    ...mapState(['isSidebarToggled']),
   }
 }
 </script>
 
 <style lang="scss">
+#container {
+  display: flex;
+}
+
+.persistent-content {
+  width: 100%;
+}
+
 .orange-button {
   background-color: var(--orange);
   border-radius: 4px;

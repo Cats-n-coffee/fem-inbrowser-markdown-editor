@@ -1,11 +1,11 @@
 <template>
     <button
       class="sidebar-toggle"
-      @click="openSidebar"
+      @click="toToggleSidebar"
       type="button"
     >
       <img
-        v-if="!isSidebarOpen"
+        v-if="!isSidebarToggled"
         src="../../assets/images/icon-menu.svg"
         alt="open sidebar"
       />
@@ -18,20 +18,23 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
+
 export default {
     name: 'SidebarToggle',
     computed: {
-        isSidebarOpen() {
-            return this.$store.state.isSidebarToggled;
-        },
+        ...mapState(['isSidebarToggled']),
     },
+    methods: {
+      ...mapActions(['toToggleSidebar']),
+    }
 }
 </script>
 
 <style lang="scss" scoped>
 .sidebar-toggle {
-    width: 72px;
-    height: 72px;
+    width: 56px;
+    height: 56px;
     background-color: #35393F;
     border: none;
     cursor: pointer;
@@ -40,5 +43,12 @@ export default {
     &:hover {
         background-color: var(--orange);
     }
+}
+
+@media screen and (min-width: 768px) {
+  .sidebar-toggle {
+    width: 72px;
+    height: 72px;
+  }
 }
 </style>

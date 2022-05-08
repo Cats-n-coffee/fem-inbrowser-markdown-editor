@@ -16,5 +16,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.theme-toggle-wrapper {
+    margin-top: auto;
+    padding-bottom: 24px;
+}
 </style>

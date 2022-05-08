@@ -35,4 +35,9 @@ export const store = createStore({
       state.isOnlyPreview = !state.isOnlyPreview;
     },
   },
+  actions: {
+    toToggleSidebar: (context) => {
+      context.commit("toggleSidebar");
+    },
+  },
 });
