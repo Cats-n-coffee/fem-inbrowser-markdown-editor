@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+*, *::before, *::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html, body, #app, #container {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--content-body-bg);
+    font-family: $font-regular;
+    font-size: 15px;
+}
+
+body[data-theme="light"] {
+    --topbar: #2B2D31;
+    --sidebar: #2B2D31;
+    --sidebar-toggle: #5A6069;
+    --sidebar-toggle-button: #FFFFFF;
+    --orange: #E46643;
+    --light-orange: #F39765;
+    --bars-primary: #7C8187;
+    --bars-secondary: #FFFFFF;
+    --content-header-bg: #F5F5F5;
+    --content-header-text: #7C8187;
+    --content-body-bg: #FFFFFF;
+    --content-markdown-text: #1D1F22;
+    --content-preview-title: #1D1F22;
+    --content-preview-text: #7C8187;
+    --content-blocks-bg: #F5F5F5;
+    --content-blocks-text: #35393F;
+}
+
+body[data-theme="dark"] {
+    --topbar: #2B2D31;
+    --sidebar: #2B2D31;
+    --sidebar-toggle: #5A6069;
+    --sidebar-toggle-button: #FFFFFF;
+    --orange: #E46643;
+    --light-orange: #F39765;
+    --bars-primary: #7C8187;
+    --bars-secondary: #FFFFFF;
+    --content-header-bg: #1D1F22;
+    --content-header-text: #C1C4CB;
+    --content-body-bg: #151619;
+    --content-markdown-text: #C1C4CB;
+    --content-preview-title: #FFFFFF;
+    --content-preview-text: #C1C4CB;
+    --content-blocks-bg: #2B2D31;
+    --content-blocks-text: #FFFFFF;
+}
