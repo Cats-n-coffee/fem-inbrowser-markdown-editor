@@ -34,10 +34,19 @@ export const store = createStore({
     changeView: (state) => {
       state.isOnlyPreview = !state.isOnlyPreview;
     },
+    appendText: (state, payload) => {
+      state.documentMdInView.content = payload;
+    },
   },
   actions: {
     toToggleSidebar: (context) => {
       context.commit("toggleSidebar");
+    },
+    toChangeView: (context) => {
+      context.commit("changeView");
+    },
+    toAppendText: (context, payload) => {
+      context.commit("appendText", payload);
     },
   },
 });

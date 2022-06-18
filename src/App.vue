@@ -3,6 +3,7 @@
     <Sidebar v-if="isSidebarToggled"/>
     <div class="persistent-content">
       <Topbar />
+      <DocumentView />
     </div>
   </div>
 </template>
@@ -11,12 +12,14 @@
 import { mapState } from 'vuex';
 import Topbar from './components/Topbar/Topbar.vue';
 import Sidebar from './components/Sidebar/Sidebar.vue';
+import DocumentView from './components/Views/DocumentView.vue';
 
 export default {
   name: 'AppWrapper',
   components: {
     Topbar,
     Sidebar,
+    DocumentView,
   },
   computed: {
     ...mapState(['isSidebarToggled']),
@@ -51,5 +54,27 @@ export default {
   font-weight: 700;
   color: var(--bars-secondary);
   letter-spacing: 5px;
+}
+
+.document-header {
+  background-color: var(--content-header-bg);
+  height: 42px;
+  padding: 12px 16px;
+
+  h2 {
+    color: var(--content-header-text);
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+}
+
+.file-content {
+  height: calc(100% - 42px);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

@@ -34,6 +34,7 @@ body[data-theme="light"] {
     --content-preview-text: #7C8187;
     --content-blocks-bg: #F5F5F5;
     --content-blocks-text: #35393F;
+    --separation-border: #E4E4E4;
 }
 
 body[data-theme="dark"] {
@@ -53,4 +54,5 @@ body[data-theme="dark"] {
     --content-preview-text: #C1C4CB;
     --content-blocks-bg: #2B2D31;
     --content-blocks-text: #FFFFFF;
+    --separation-border: #5A6069;
 }
