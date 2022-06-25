@@ -5,19 +5,56 @@ export const convertToHtmlTag = (content) => {
   switch (true) {
     case /^# /.test(content):
       return "h1";
-    case /## /.test(content):
+    case /^## /.test(content):
       return "h2";
+    case /^### /.test(content):
+      return "h3";
+    case /^#### /.test(content):
+      return "h4";
+    case /^##### /.test(content):
+      return "h5";
+    case /^###### /.test(content):
+      return "h6";
+    // case /(?<!\*)\*(?![*\s])(?:[^*]*[^*\s])?\*/.test(content):
+    //   return "em";
+    // case /\**(?![*\s])(?:[^*]*[^*\s])?\*\*/.test(content):
+    //   return "strong";
+    default:
+      return;
+  }
+};
+
+const convertMidlineTags = (content) => {
+  switch (true) {
+    case /(?<!\*)\*(?![*\s])(?:[^*]*[^*\s])?\*/.test(content):
+      return content.replace(
+        /((?<!\*)\*(?![*\s]))(.+)(?:[^*]*[^*\s])?\*/g,
+        "<em>$2</em>"
+      );
+    case /\*{2}(?![*\s])(?:[^*]*[^*\s])?\*\*/.test(content):
+      return content.replace(
+        /\*{2}(?![*\s])(.+)(?:[^*]*[^*\s])?\*\*/g,
+        "<strong>$1</strong>"
+      );
     default:
       return;
   }
 };
 
 export const extractTextContent = (tag, content) => {
-  const mdTag = getKeyWithValue(htmlTagsObj, tag);
-  console.log("md tag is", mdTag);
+  let textContent;
+  let mdTag;
+
+  if (tag === "p") {
+    mdTag = "p";
+  } else {
+    mdTag = getKeyWithValue(htmlTagsObj, tag);
+    console.log("md tag is", mdTag);
+  }
   const startText = content.indexOf(mdTag);
   const mdTagLength = mdTag.length;
-  const textContent = content.slice(startText + mdTagLength);
+  textContent = content.slice(startText + mdTagLength);
+
   console.log("text content", textContent);
   return textContent;
 };
@@ -42,13 +79,13 @@ export const parseLine = (line) => {
   if (expectedTag) {
     htmlTag = `<${expectedTag}></${expectedTag}>`;
     text = extractTextContent(expectedTag, line);
+  } else {
+    htmlTag = "<p></p>";
+    text = extractTextContent("p", line);
   }
 
-  const rendering = buildHtml(htmlTag, text);
-  console.log("RENDERING", rendering);
-  return rendering;
-};
-
-export const parseAsOldLine = (line) => {
-  console.log("%cparsing as old line", "color: green", line);
+  const firstBuild = buildHtml(htmlTag, text);
+  const secondBuild = convertMidlineTags(firstBuild);
+  console.log("RENDERING", secondBuild);
+  return secondBuild || firstBuild;
 };

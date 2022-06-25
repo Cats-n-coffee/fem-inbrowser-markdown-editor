@@ -49,13 +49,7 @@ export default {
             console.log('%cBEGINNING', 'color: magenta', content);
 
             if (!content) return;
-            // if (content.includes('\n') && this.htmlTag && this.textContent) {
-            //     console.log('new line', this.result);
-            //     this.result = this.result.concat('\n');
-            //     this.htmlTag = '';
-            //     this.textContent = '';
-            //     return;
-            // }
+            
             // TRY: wait for white space to decide the tag, if no white space
             // print regular text
 
@@ -68,12 +62,14 @@ export default {
 
             // if there are new lines, we can parse without the "on the fly" parsing
             // this is for existing text that we need to print to the screen
+            let currentLastLine;
             if (content.includes('\n')) {
                 const oldLines = content.split('\n');
                 console.log('whole array', oldLines);
                 // If newline is the last character, we assume only parsing old lines
                 if (content.lastIndexOf('\n') === content.length - 1) {
                     this.previousLines = oldLines;
+                    this.currentLine = '';
                 } else { // If newline isn't last, the assume the user is typing
                     this.previousLines = oldLines.slice(0, oldLines.length - 1);
                     console.log('previous', this.previousLines);
@@ -84,66 +80,25 @@ export default {
                 let parsedPreviousLines = this.previousLines.map(line => {
                     const lineToRender = parseLine(line);
                     return lineToRender;
-                })
+                }).filter(item => item);
                 console.log('parsed prev lines', parsedPreviousLines);
+                currentLastLine = parseLine(this.currentLine);
                 this.resultArr = parsedPreviousLines;
+
+                if (this.currentLine) {
+                    this.resultArr.push(currentLastLine);
+                }
+                
+                console.log('%c has prev lines', 'color: green', this.resultArr);
+                this.result = this.resultArr.join('');
             } else {
                 this.currentLine = content;
-                // TODO: uncomment the next lines
-                // const expectedTag = convertToHtmlTag(content);
-                // if (expectedTag) {
-                //     this.htmlTag = `<${expectedTag}></${expectedTag}>`
-                //     console.log('using outside fn', this.htmlTag);
-                //     extractTextContent(expectedTag, content);
-                // }
-                
+                currentLastLine = parseLine(this.currentLine);
+                this.result = currentLastLine;
+                console.log('%c no prev lines', 'color: orange', this.result);
             }
-  
-            // if (Object.keys(htmlTagsObj).indexOf(content) > -1) {
-            //     console.log('CONTENT', content);
-            //     console.log('%cMATCHING', 'color: green',htmlTagsObj[content]);
-            //     const html = convertToHtmlTag(content);
-            //     console.log('html', html);
-            //     // this.htmlTag = htmlTagsObj[content];
-            //     // this.blockType = content;
-            // } 
-            // else if (this.htmlTag) {
-            //     console.log('else clause, already have a tag');
-            //     console.log('TEXT CONTENT', content);
-            //     const tokenIndex = content.indexOf(this.blockType);
-            //     console.log('index', tokenIndex, 'length', this.blockType.length);
-            //     this.textContent = content.slice(tokenIndex + this.blockType.length);
-
-            //     // if text then display
-            //     const textContentIndex = this.htmlTag.indexOf('</');
-            //     console.log('%ctext index', 'color: orange', textContentIndex);
-            //     const endTag = this.htmlTag.slice(textContentIndex);
-            //     const builtElement = this.htmlTag.slice(0, textContentIndex) + this.textContent + endTag;
-            //     console.log(builtElement);
-            //     this.result = builtElement;
-            // } else {
-            //     console.log('else clause, can\'t match');
-            // }
             
-            // console.log('blockType', this.blockType, 'text', this.textContent);
-            console.log('html', this.htmlTag);
-            this.result = this.resultArr.join('');
             return this.htmlTag;
-        },
-        getBlockType() {
-            switch(this.blockType) {
-                case '#': 
-                    return '<h1></h1>';
-                case '##': 
-                    return '<h2></h2>';
-            }
-        },
-        includeText() {
-            const closingTagIndex = this.htmlTag.indexOf('</');
-            console.log(closingTagIndex);
-            this.result = `
-                ${this.htmlTag.slice(0, closingTagIndex - 1)}${this.textContent}${this.htmlTag.slice(closingTagIndex, this.htmlTag.length - 1)}
-            `;
         },
     },
     watch: {
