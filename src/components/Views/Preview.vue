@@ -23,7 +23,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-import { parseLine } from '../../helpers/parsing';
+import { parseLine, buildLists } from '../../helpers/parsing';
 // import { htmlTagsObj } from '../../constants/htmlTags';
 
 export default {
@@ -84,6 +84,8 @@ export default {
                 console.log('parsed prev lines', parsedPreviousLines);
                 currentLastLine = parseLine(this.currentLine);
                 this.resultArr = parsedPreviousLines;
+
+                buildLists(this.resultArr);
 
                 if (this.currentLine) {
                     this.resultArr.push(currentLastLine);

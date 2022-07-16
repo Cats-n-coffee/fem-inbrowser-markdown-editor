@@ -8,7 +8,7 @@ export const htmlTagsObj = {
   "*": "em",
   "**": "strong",
   "1. ": "ol",
-  "- ": "ul",
+  // "- ": "ul",
   "* ": "ul",
   ">": "blockquote",
   "`": "code",

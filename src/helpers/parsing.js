@@ -15,16 +15,15 @@ export const convertToHtmlTag = (content) => {
       return "h5";
     case /^###### /.test(content):
       return "h6";
-    // case /(?<!\*)\*(?![*\s])(?:[^*]*[^*\s])?\*/.test(content):
-    //   return "em";
-    // case /\**(?![*\s])(?:[^*]*[^*\s])?\*\*/.test(content):
-    //   return "strong";
+    case /^\* /.test(content):
+      return "ul";
     default:
       return;
   }
 };
 
 const convertMidlineTags = (content) => {
+  console.log("inside MIDLINES", content);
   switch (true) {
     case /(?<!\*)\*(?![*\s])(?:[^*]*[^*\s])?\*/.test(content):
       return content.replace(
@@ -36,9 +35,49 @@ const convertMidlineTags = (content) => {
         /\*{2}(?![*\s])(.+)(?:[^*]*[^*\s])?\*\*/g,
         "<strong>$1</strong>"
       );
+    case /<(?!p>).*(?<!<\/p)>/.test(content):
+      return content.replace(/<(?!p>)(.*)(?<!<\/p)>/g, '<a href="$1">$1</a>');
+    case /\[.*\]\(.*\)/.test(content):
+      return content.replace(
+        /\[(.*)\]\((.*)\)/g,
+        '<a href="$2" target="blank">$1</a>'
+      );
     default:
       return;
   }
+};
+
+export const buildLists = (rawLists) => {
+  console.log("build lists", rawLists);
+  let startIndex;
+  let i = 0;
+  let count = 0;
+  const listItems = [];
+
+  while (i < rawLists.length) {
+    if (
+      (rawLists[i].includes("<li>") &&
+        rawLists[i - 1] &&
+        !rawLists[i - 1].includes("<li>")) ||
+      (!rawLists[i - 1] && rawLists[i].includes("<li>"))
+    ) {
+      startIndex = i;
+    }
+
+    if (rawLists[i].includes("<li>")) {
+      count++;
+      listItems.push(rawLists[i]);
+    }
+    i++;
+  }
+
+  listItems.unshift("<ul>");
+  listItems.push("</ul>");
+  const builtList = listItems.join("");
+
+  rawLists.splice(startIndex, count, builtList);
+
+  return rawLists;
 };
 
 export const extractTextContent = (tag, content) => {
@@ -49,6 +88,7 @@ export const extractTextContent = (tag, content) => {
     mdTag = "p";
   } else {
     mdTag = getKeyWithValue(htmlTagsObj, tag);
+    console.log("tag given", tag);
     console.log("md tag is", mdTag);
   }
   const startText = content.indexOf(mdTag);
@@ -76,7 +116,10 @@ export const parseLine = (line) => {
   let htmlTag;
   let text;
 
-  if (expectedTag) {
+  if (expectedTag === "ul" || expectedTag === "ol") {
+    htmlTag = "<li></li>";
+    text = extractTextContent(expectedTag, line);
+  } else if (expectedTag && expectedTag !== "ul" && expectedTag !== "ol") {
     htmlTag = `<${expectedTag}></${expectedTag}>`;
     text = extractTextContent(expectedTag, line);
   } else {
@@ -86,6 +129,6 @@ export const parseLine = (line) => {
 
   const firstBuild = buildHtml(htmlTag, text);
   const secondBuild = convertMidlineTags(firstBuild);
-  console.log("RENDERING", secondBuild);
+  console.log("SECOND BUILD", secondBuild);
   return secondBuild || firstBuild;
 };
