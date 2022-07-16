@@ -17,38 +17,65 @@ export const convertToHtmlTag = (content) => {
       return "h6";
     case /^\* /.test(content):
       return "ul";
+    case /^\d*\. /.test(content):
+      return "ol";
+    case /^> /.test(content):
+      return "blockquote";
     default:
       return;
   }
 };
 
-const convertMidlineTags = (content) => {
-  console.log("inside MIDLINES", content);
-  switch (true) {
-    case /(?<!\*)\*(?![*\s])(?:[^*]*[^*\s])?\*/.test(content):
-      return content.replace(
-        /((?<!\*)\*(?![*\s]))(.+)(?:[^*]*[^*\s])?\*/g,
-        "<em>$2</em>"
-      );
-    case /\*{2}(?![*\s])(?:[^*]*[^*\s])?\*\*/.test(content):
-      return content.replace(
-        /\*{2}(?![*\s])(.+)(?:[^*]*[^*\s])?\*\*/g,
-        "<strong>$1</strong>"
-      );
-    case /<(?!p>).*(?<!<\/p)>/.test(content):
-      return content.replace(/<(?!p>)(.*)(?<!<\/p)>/g, '<a href="$1">$1</a>');
-    case /\[.*\]\(.*\)/.test(content):
-      return content.replace(
-        /\[(.*)\]\((.*)\)/g,
-        '<a href="$2" target="blank">$1</a>'
-      );
-    default:
-      return;
+const convertMidlineTags = (firstBuild) => {
+  let content = firstBuild;
+
+  if (/(?<!\*)\*(?![*\s])(?:[^*]*[^*\s])?\*/.test(content)) {
+    content = content.replace(
+      /((?<!\*)\*(?![*\s]))(.+)(?:[^*]*[^*\s])?\*/g,
+      "<em>$2</em>"
+    );
   }
+  if (/\*{2}(?![*\s])(?:[^*]*[^*\s])?\*\*/.test(content)) {
+    content = content.replace(
+      /\*{2}(?![*\s])(.+)(?:[^*]*[^*\s])?\*\*/g,
+      "<strong>$1</strong>"
+    );
+  }
+  // if (
+  //   /<(?!p>|li>|h\d*>|blockquote>).*(?<!<\/p|<\/li|<\/h\d*|<\/blockquote)>/.test(
+  //     content
+  //   )
+  // ) {
+  //   content = content.replace(
+  //     /<(?!p>|li>|h\d*>|blockquote>)(.*)(?<!<\/p|<\/li|<\/h\d*|<\/blockquote)>/g,
+  //     '<a href="$1">$1</a>'
+  //   );
+  // }
+  if (/\[.*\]\(.*\)/.test(content)) {
+    content = content.replace(
+      /\[(.*)\]\((.*)\)/g,
+      '<a href="$2" target="blank">$1</a>'
+    );
+  }
+  if (/`{1}.*`{1}/.test(content)) {
+    content = content.replace(/`{1}(.*)`{1}/g, "<code>$1</code>");
+  }
+
+  return content;
 };
 
-export const buildLists = (rawLists) => {
-  console.log("build lists", rawLists);
+export const buildLists = (rawLists, content) => {
+  console.log("%cbuild lists", "color: red", rawLists);
+  let listType = "ul";
+
+  if (/^\d*\. /.test(content)) {
+    listType = "ol";
+  } else if (/^\* /.test(content)) {
+    listType = "ul";
+  } else if (!/^\d*\. /.test(content) && !/^\* /.test(content)) {
+    return;
+  }
+
   let startIndex;
   let i = 0;
   let count = 0;
@@ -71,8 +98,8 @@ export const buildLists = (rawLists) => {
     i++;
   }
 
-  listItems.unshift("<ul>");
-  listItems.push("</ul>");
+  listItems.unshift(`<${listType}>`);
+  listItems.push(`</${listType}>`);
   const builtList = listItems.join("");
 
   rawLists.splice(startIndex, count, builtList);
@@ -115,7 +142,7 @@ export const parseLine = (line) => {
   const expectedTag = convertToHtmlTag(line);
   let htmlTag;
   let text;
-
+  console.log("EXPECTED TAG", expectedTag);
   if (expectedTag === "ul" || expectedTag === "ol") {
     htmlTag = "<li></li>";
     text = extractTextContent(expectedTag, line);

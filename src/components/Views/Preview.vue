@@ -15,16 +15,16 @@
                 </svg>
             </button>
         </div>
-        <div class="file-content">
-            <div v-html="result"></div>
-        </div>
+        <div
+          class="file-content"
+          v-html="result"
+        />
     </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
 import { parseLine, buildLists } from '../../helpers/parsing';
-// import { htmlTagsObj } from '../../constants/htmlTags';
 
 export default {
     name: 'Preview',
@@ -48,7 +48,10 @@ export default {
             const content = this.documentMdInView.content;
             console.log('%cBEGINNING', 'color: magenta', content);
 
-            if (!content) return;
+            if (!content){
+                this.clearAllText();
+                return;
+            }
             
             // TRY: wait for white space to decide the tag, if no white space
             // print regular text
@@ -85,7 +88,7 @@ export default {
                 currentLastLine = parseLine(this.currentLine);
                 this.resultArr = parsedPreviousLines;
 
-                buildLists(this.resultArr);
+                buildLists(this.resultArr, content);
 
                 if (this.currentLine) {
                     this.resultArr.push(currentLastLine);
@@ -101,6 +104,9 @@ export default {
             }
             
             return this.htmlTag;
+        },
+        clearAllText() {
+            this.result = "";
         },
     },
     watch: {
@@ -138,7 +144,98 @@ export default {
 
 .file-content {
     max-width: 672px;
+    display: flex;
+    flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
+    padding: 22px;
+
+    ::v-deep {
+        h1 {
+            font-family: $font-slab;
+            color: var(--content-preview-title);
+            font-weight: 700;
+            font-size: 32px;
+        }
+
+        h2 {
+            font-family: $font-slab;
+            color: var(--content-preview-title);
+            font-weight: 300;
+            font-size: 28px;
+        }
+
+        h3 {
+            font-family: $font-slab;
+            color: var(--content-preview-title);
+            font-weight: 700;
+            font-size: 24px;
+        }
+
+        h4 {
+            font-family: $font-slab;
+            color: var(--content-preview-title);
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        h5 {
+            font-family: $font-slab;
+            color: var(--content-preview-title);
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        h6 {
+            font-family: $font-slab;
+            color: var(--orange);
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        p {
+            color: var(--content-preview-text);
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 24px;
+        }
+
+        li {
+            padding-left: 30px;
+            color: var(--content-preview-text);
+            font-weight: 400;
+            font-size: 14px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        ul li::before {
+            content: "\2022";
+            color: red;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        a {
+            color: var(--content-preview-text);
+            font-weight: 700;
+        }
+
+        blockquote {
+            display: block;
+            padding: 24px;
+            width: 100%;
+            background-color: var(--content-blocks-bg);
+            color: var(--content-blocks-text);
+            font-family: $font-regular;
+            font-weight: 700;
+            border-left: 4px solid var(--orange);
+            border-radius: 4px;
+        }
+    }
 }
 </style>
