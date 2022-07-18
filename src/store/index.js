@@ -10,6 +10,7 @@ export const store = createStore({
         title: "",
         date: "",
         content: "",
+        id: "",
       },
       documents: [],
     };
@@ -37,6 +38,12 @@ export const store = createStore({
     appendText: (state, payload) => {
       state.documentMdInView.content = payload;
     },
+    setDocumentId: (state, payload) => {
+      state.documentMdInView.id = payload;
+    },
+    setCollection: (state, payload) => {
+      state.documents = payload;
+    },
   },
   actions: {
     toToggleSidebar: (context) => {
@@ -47,6 +54,15 @@ export const store = createStore({
     },
     toAppendText: (context, payload) => {
       context.commit("appendText", payload);
+    },
+    addDocumentToCollection: (context, payload = null) => {
+      const currentLocalStorage = JSON.parse(localStorage.getItem("mdDocs"));
+
+      if (payload) {
+        currentLocalStorage.push(payload);
+      }
+
+      context.commit("setCollection", currentLocalStorage);
     },
   },
 });

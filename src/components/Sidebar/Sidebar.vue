@@ -7,25 +7,39 @@
         <div class="sidebar-documents">
             <NewDocumentButton />
             <ul class="document-collection">
-
+                <DocumentItem
+                  v-for="(doc, index) in documents"
+                  :item="doc"
+                  :key="index"
+                  @dblclick="renameDocument"
+                />
             </ul>
         </div>
-        
-        
         <ThemeToggle />
     </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import NewDocumentButton from './NewDocumentButton.vue';
 import ThemeToggle from './ThemeToggle.vue';
+import DocumentItem from './DocumentItem.vue';
 
 export default {
     name: 'Sidebar',
     components: {
         NewDocumentButton,
         ThemeToggle,
+        DocumentItem,
     },
+    computed: {
+        ...mapState(['documents']),
+    },
+    methods: {
+        renameDocument() {
+            console.log('rename');
+        }
+    }
 }
 </script>
 

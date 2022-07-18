@@ -15,10 +15,12 @@
                 </svg>
             </button>
         </div>
-        <div
-          class="file-content"
-          v-html="result"
-        />
+        <div class="file-content">
+          <div
+            class="preview-content"
+            v-html="result"
+          />
+        </div>
     </div>
 </template>
 
@@ -94,7 +96,6 @@ export default {
                     this.resultArr.push(currentLastLine);
                 }
                 
-                console.log('%c has prev lines', 'color: green', this.resultArr);
                 this.result = this.resultArr.join('');
             } else {
                 this.currentLine = content;
@@ -143,12 +144,19 @@ export default {
 }
 
 .file-content {
-    max-width: 672px;
+    width: 100%;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 22px;
+}
+
+.preview-content {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    padding: 22px;
+    width: 100%;
+    max-width: 672px;
 
     ::v-deep {
         h1 {
@@ -195,6 +203,7 @@ export default {
 
         p {
             color: var(--content-preview-text);
+            font-family: $font-slab;
             font-weight: 400;
             font-size: 14px;
             line-height: 24px;
@@ -202,6 +211,7 @@ export default {
 
         li {
             padding-left: 30px;
+            font-family: $font-slab;
             color: var(--content-preview-text);
             font-weight: 400;
             font-size: 14px;
@@ -223,6 +233,7 @@ export default {
         a {
             color: var(--content-preview-text);
             font-weight: 700;
+            font-family: $font-slab;
         }
 
         blockquote {
@@ -231,7 +242,7 @@ export default {
             width: 100%;
             background-color: var(--content-blocks-bg);
             color: var(--content-blocks-text);
-            font-family: $font-regular;
+            font-family: $font-slab;
             font-weight: 700;
             border-left: 4px solid var(--orange);
             border-radius: 4px;

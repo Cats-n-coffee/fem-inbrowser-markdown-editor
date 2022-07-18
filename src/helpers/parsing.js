@@ -65,7 +65,6 @@ const convertMidlineTags = (firstBuild) => {
 };
 
 export const buildLists = (rawLists, content) => {
-  console.log("%cbuild lists", "color: red", rawLists);
   let listType = "ul";
 
   if (/^\d*\. /.test(content)) {
@@ -127,7 +126,6 @@ export const extractTextContent = (tag, content) => {
 };
 
 export const buildHtml = (tag, text) => {
-  console.log("build html function", tag, text);
   if (!tag) return;
   const endTagIndex = tag.indexOf("</");
   const result = `${tag.slice(0, endTagIndex)}${text}${tag.slice(endTagIndex)}`;
@@ -142,7 +140,7 @@ export const parseLine = (line) => {
   const expectedTag = convertToHtmlTag(line);
   let htmlTag;
   let text;
-  console.log("EXPECTED TAG", expectedTag);
+
   if (expectedTag === "ul" || expectedTag === "ol") {
     htmlTag = "<li></li>";
     text = extractTextContent(expectedTag, line);

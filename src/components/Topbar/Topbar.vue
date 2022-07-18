@@ -23,15 +23,16 @@
                     />
                 </svg>
             </button>
-            <SaveButton />
+            <SaveButton @click="saveDocument"/>
         </div>
     </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 import SaveButton from './SaveButton.vue';
 import SidebarToggle from './SidebarToggle.vue';
+import { checkForIdInLocalStorage, updateDocInLocalStorage } from '../../helpers/common';
 
 export default {
     name: 'Topbar',
@@ -40,7 +41,26 @@ export default {
         SidebarToggle,
     },
     computed: {
-        ...mapState(['isSidebarToggled']),
+        ...mapState(['isSidebarToggled', 'documentMdInView']),
+    },
+    methods: {
+        ...mapMutations(['setDocumentId']),
+        ...mapActions(['addDocumentToCollection']),
+        saveDocument() {
+            const allDocuments = JSON.parse(localStorage.getItem('mdDocs'));
+            const selectedDoc = checkForIdInLocalStorage(this.documentMdInView.id, allDocuments)
+
+            if (selectedDoc) {
+                updateDocInLocalStorage(this.documentMdInView, allDocuments);
+            }
+            else {
+                const docId = Date.now();
+
+                this.setDocumentId(docId);
+                this.addDocumentToCollection(this.documentMdInView);
+                updateDocInLocalStorage(this.documentMdInView, allDocuments);
+            }
+        },
     },
 }
 </script>

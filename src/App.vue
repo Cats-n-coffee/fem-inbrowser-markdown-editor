@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import Topbar from './components/Topbar/Topbar.vue';
 import Sidebar from './components/Sidebar/Sidebar.vue';
 import DocumentView from './components/Views/DocumentView.vue';
@@ -23,6 +23,17 @@ export default {
   },
   computed: {
     ...mapState(['isSidebarToggled']),
+  },
+  methods: {
+    ...mapActions(['addDocumentToCollection']),
+  },
+  created() {
+    if (!localStorage.getItem('mdDocs')) {
+      localStorage.setItem('mdDocs', JSON.stringify([]));
+    }
+  },
+  mounted() {
+    this.addDocumentToCollection();
   }
 }
 </script>
