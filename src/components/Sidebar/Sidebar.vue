@@ -11,7 +11,6 @@
                   v-for="(doc, index) in documents"
                   :item="doc"
                   :key="index"
-                  @dblclick="renameDocument"
                 />
             </ul>
         </div>
@@ -33,13 +32,8 @@ export default {
         DocumentItem,
     },
     computed: {
-        ...mapState(['documents']),
+        ...mapState(['documents', 'documentMdInView']),
     },
-    methods: {
-        renameDocument() {
-            console.log('rename');
-        }
-    }
 }
 </script>
 

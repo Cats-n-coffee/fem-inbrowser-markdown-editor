@@ -23,5 +23,6 @@ export default {
     width: 202px;
     height: 40px;
     color: $white;
+    margin-bottom: 24px;
 }
 </style>

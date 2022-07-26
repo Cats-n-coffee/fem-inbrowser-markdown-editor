@@ -14,7 +14,7 @@
           class="right-tools-section">
             <button
               class="delete-button"
-              @click="deleteFile"
+              @click="deleteDoc"
             >
                 <svg width="18" height="20" viewBox="0 0 18 20" xmlns="http://www.w3.org/2000/svg">
                     <path 
@@ -29,10 +29,9 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import SaveButton from './SaveButton.vue';
 import SidebarToggle from './SidebarToggle.vue';
-import { checkForIdInLocalStorage, updateDocInLocalStorage } from '../../helpers/common';
 
 export default {
     name: 'Topbar',
@@ -44,23 +43,10 @@ export default {
         ...mapState(['isSidebarToggled', 'documentMdInView']),
     },
     methods: {
-        ...mapMutations(['setDocumentId']),
-        ...mapActions(['addDocumentToCollection']),
-        saveDocument() {
-            const allDocuments = JSON.parse(localStorage.getItem('mdDocs'));
-            const selectedDoc = checkForIdInLocalStorage(this.documentMdInView.id, allDocuments)
-
-            if (selectedDoc) {
-                updateDocInLocalStorage(this.documentMdInView, allDocuments);
-            }
-            else {
-                const docId = Date.now();
-
-                this.setDocumentId(docId);
-                this.addDocumentToCollection(this.documentMdInView);
-                updateDocInLocalStorage(this.documentMdInView, allDocuments);
-            }
-        },
+        ...mapActions(['saveDocument', 'deleteDocumentInCollection']),
+        deleteDoc() {
+            this.deleteDocumentInCollection(this.documentMdInView.id);
+        }
     },
 }
 </script>

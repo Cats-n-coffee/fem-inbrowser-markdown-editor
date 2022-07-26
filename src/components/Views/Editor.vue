@@ -23,9 +23,6 @@ export default {
             textInput: '',
         }
     },
-    mounted() {
-        this.textInput = this.documentMdInView.content;
-    },
     computed: {
         ...mapState(['documentMdInView']),
     },
@@ -35,6 +32,14 @@ export default {
             this.$store.dispatch('toAppendText', this.textInput);
         }
     },
+    watch: {
+        documentMdInView: {
+            handler(newValue) {
+                this.textInput = newValue.content;
+            },
+            deep: true,
+        }
+    }
 }
 </script>
 
