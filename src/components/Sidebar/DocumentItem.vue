@@ -33,7 +33,7 @@ export default {
     },
     data() {
         return {
-            documentName: (this.item?.title || "untitled-document") + ".md",
+            documentName: this.item?.title + ".md",
             renameEnabled: false,
         };
     },
@@ -63,7 +63,6 @@ export default {
             }
         },
         displayDoc() {
-            console.log('display', this.item);
             this.setDocumentInView(this.item);
         }
     },
@@ -82,7 +81,6 @@ export default {
 .item-icon {
     width: 14px;
     height: 16px;
-    /* width: 100%; */
 }
 
 .item-content {

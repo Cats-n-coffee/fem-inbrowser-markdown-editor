@@ -8,11 +8,20 @@
 </template>
 
 <script>
+import { mapActions, mapMutations } from 'vuex';
 export default {
     name: 'NewDocumentButton',
     methods: {
+        ...mapActions(['saveDocument']),
+        ...mapMutations(['setDocumentInView']),
         createDocument() {
-            console.log('create document');
+            this.saveDocument();
+            this.setDocumentInView({
+                title: "",
+                date: "",
+                content: "",
+                id: "",
+            });
         }
     }
 }

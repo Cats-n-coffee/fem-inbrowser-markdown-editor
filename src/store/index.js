@@ -6,6 +6,7 @@ export const store = createStore({
     return {
       theme: "light",
       isSidebarToggled: false,
+      isModalOpen: false,
       isOnlyPreview: false,
       documentMdInView: {
         title: "",
@@ -14,7 +15,6 @@ export const store = createStore({
         id: "",
       },
       documents: [],
-      tabs: [],
     };
   },
   mutations: {
@@ -37,6 +37,9 @@ export const store = createStore({
     changeView: (state) => {
       state.isOnlyPreview = !state.isOnlyPreview;
     },
+    toggleModal: (state, payload) => {
+      state.isModalOpen = payload;
+    },
     appendText: (state, payload) => {
       state.documentMdInView.content = payload;
     },
@@ -45,6 +48,9 @@ export const store = createStore({
     },
     setDate: (state, payload) => {
       state.documentMdInView.date = payload;
+    },
+    setTitle: (state, title) => {
+      state.documentMdInView.title = title;
     },
     setCollection: (state, payload) => {
       state.documents = payload;
@@ -92,6 +98,7 @@ export const store = createStore({
 
         context.commit("setDocumentId", docId);
         context.commit("setDate", formatDate(docId));
+        context.commit("setTitle", "untitled-document");
         context.dispatch("addDocumentToCollection", docInView);
 
         localStorage.setItem(

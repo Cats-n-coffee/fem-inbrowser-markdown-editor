@@ -1,5 +1,6 @@
 <template>
   <div id="container">
+    <DeleteModal v-if="isModalOpen"/>
     <Sidebar v-if="isSidebarToggled"/>
     <div class="persistent-content">
       <Topbar />
@@ -13,6 +14,7 @@ import { mapState, mapActions } from 'vuex';
 import Topbar from './components/Topbar/Topbar.vue';
 import Sidebar from './components/Sidebar/Sidebar.vue';
 import DocumentView from './components/Views/DocumentView.vue';
+import DeleteModal from './components/Shared/DeleteModal.vue';
 
 export default {
   name: 'AppWrapper',
@@ -20,9 +22,10 @@ export default {
     Topbar,
     Sidebar,
     DocumentView,
+    DeleteModal,
   },
   computed: {
-    ...mapState(['isSidebarToggled']),
+    ...mapState(['isSidebarToggled', 'isModalOpen']),
   },
   methods: {
     ...mapActions(['addDocumentToCollection']),
@@ -41,6 +44,7 @@ export default {
 <style lang="scss">
 #container {
   display: flex;
+  position: relative;
 }
 
 .persistent-content {
