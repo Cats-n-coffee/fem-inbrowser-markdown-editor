@@ -1,7 +1,11 @@
 <template>
     <div class="document-wrapper">
-        <Editor v-if="!isOnlyPreview"/>
-        <Preview />
+        <Editor
+          v-if="!isOnlyPreview"
+        />
+        <Preview
+          :class="{ remove: !isOnlyPreview }"
+        />
     </div>
 </template>
 
@@ -26,5 +30,13 @@ export default {
 .document-wrapper {
     display: flex;
     height: calc(100% - 72px);
+}
+
+.remove {
+    display: none;
+
+    @media screen and (min-width: 600px) {
+        display: block;
+    }
 }
 </style>
