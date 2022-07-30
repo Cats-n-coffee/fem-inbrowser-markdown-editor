@@ -57,7 +57,9 @@ export default {
         ...mapActions(['saveDocument']),
         ...mapMutations(['toggleModal']),
         openDeleteModal() {
-            this.toggleModal(true);
+            if (this.documentMdInView.id) {
+                this.toggleModal(true);
+            }
         },
     },
 }

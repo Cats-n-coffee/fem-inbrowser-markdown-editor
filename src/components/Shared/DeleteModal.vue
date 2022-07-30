@@ -16,7 +16,12 @@
                 and its content?<br>
                 This action cannot be reversed.
             </p>
-            <button class="orange-button">Confirm & Delete</button>
+            <button
+              class="orange-button"
+              @click="deleteAndClose"
+            >
+                Confirm & Delete
+            </button>
         </div>
     </div>
 </template>
@@ -46,9 +51,61 @@ export default {
 .delete-modal-container {
     position: absolute;
     background-color: var(--modal-background);
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .delete-modal {
     background-color: var(--content-blocks-bg);
+    position: relative;
+    padding: 24px;
+    max-width: 343px;
+    border-radius: 4px;
+
+    h2 {
+        font-size: 20px;
+        font-weight: 700;
+        font-family: $font-slab;
+        color: var(--content-blocks-text);
+    }
+
+    p {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 24px;
+        padding: 16px 0;
+        color: var(--content-preview-text);
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        color: $white;
+        font-size: 15px;
+        font-weight: 400;
+    }
+}
+
+.close-icon {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    cursor: pointer;
+
+    path {
+        fill: var(--content-blocks-text);
+        transition: all 400ms ease-in-out;
+    }
+
+    &:hover {
+        path {
+            fill: var(--orange);
+        }
+    }
 }
 </style>

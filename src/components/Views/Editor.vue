@@ -26,6 +26,11 @@ export default {
     computed: {
         ...mapState(['documentMdInView']),
     },
+    mounted() {
+        if (this.documentMdInView.content.length) {
+            this.textInput = this.documentMdInView.content;
+        }
+    },
     methods: {
         ...mapActions(['toAppendText']),
         updateDocumentText() {
