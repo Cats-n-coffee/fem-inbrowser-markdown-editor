@@ -15,7 +15,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { parseLine, buildLists } from '../../helpers/parsing';
+import { loopForLists, parseLine } from '../../helpers/parsing';
 import ToggleView from './ToggleView.vue';
 
 export default {
@@ -30,8 +30,6 @@ export default {
             currentLine: '',
             previousLines: [],
             htmlTag: '',
-            blockType: '',
-            textContent: '',
         }
     },
     computed: {
@@ -40,19 +38,11 @@ export default {
     methods: {
         parseMarkdown() {
             const content = this.documentMdInView.content;
-            console.log('%cBEGINNING', 'color: magenta', content);
 
             if (!content){
                 this.clearAllText();
                 return;
             }
-            
-            // TRY: wait for white space to decide the tag, if no white space
-            // print regular text
-
-            // TODO: need an extra function to CHECK for newlines and split the 
-            // content so it can be further processed as either old or new/current 
-            // lines.
             // IF there is a newline in the content string, we know there is old
             // content, and we have to treat it as such. 
             // Anything AFTER the LAST newline will be treated as the current line
@@ -62,38 +52,33 @@ export default {
             let currentLastLine;
             if (content.includes('\n')) {
                 const oldLines = content.split('\n');
-                console.log('whole array', oldLines);
+
                 // If newline is the last character, we assume only parsing old lines
                 if (content.lastIndexOf('\n') === content.length - 1) {
                     this.previousLines = oldLines;
                     this.currentLine = '';
-                } else { // If newline isn't last, the assume the user is typing
+                } else { // If newline isn't last, then assume the user is typing
                     this.previousLines = oldLines.slice(0, oldLines.length - 1);
-                    console.log('previous', this.previousLines);
-
                     this.currentLine = oldLines[oldLines.length - 1];
-                    console.log('current LINE', this.currentLine);
                 } 
                 let parsedPreviousLines = this.previousLines.map(line => {
                     const lineToRender = parseLine(line);
                     return lineToRender;
                 }).filter(item => item);
-                console.log('parsed prev lines', parsedPreviousLines);
                 currentLastLine = parseLine(this.currentLine);
                 this.resultArr = parsedPreviousLines;
 
-                buildLists(this.resultArr, content);
+                this.resultArr = loopForLists(this.resultArr);
 
                 if (this.currentLine) {
                     this.resultArr.push(currentLastLine);
                 }
                 
                 this.result = this.resultArr.join('');
-            } else {
+            } else { // handles the content as only one line (current line)
                 this.currentLine = content;
                 currentLastLine = parseLine(this.currentLine);
                 this.result = currentLastLine;
-                console.log('%c no prev lines', 'color: orange', this.result);
             }
             
             return this.htmlTag;
@@ -129,7 +114,7 @@ export default {
     width: 100%;
     align-items: flex-start;
     justify-content: center;
-    padding: 22px;
+    padding: 0 22px 22px 22px;
 }
 
 .preview-content {
@@ -141,11 +126,15 @@ export default {
     max-width: 672px;
 
     ::v-deep {
+        h1, h2, h3, h4, h5, h6, p, ul, ol, a, blockquote {
+            padding: 4px 0;
+        }
         h1 {
             font-family: $font-slab;
             color: var(--content-preview-title);
             font-weight: 700;
             font-size: 32px;
+            padding: 2px 0 5px 0;
         }
 
         h2 {
@@ -210,6 +199,10 @@ export default {
             display: inline-block;
             width: 1em;
             margin-left: -1em;
+        }
+
+        ol {
+            list-style-position: inside;
         }
 
         a {
